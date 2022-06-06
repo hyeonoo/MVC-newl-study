@@ -3,19 +3,17 @@ package com.newlecture.web;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@WebServlet("/calc2")
+@WebServlet("/calc")
 public class Calc extends HttpServlet {
 	@Override
 	protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		ServletContext application = request.getServletContext();		//값을 저장하기 위한곳
-		
+	
 		response.setCharacterEncoding("UTF-8");					
 		response.setContentType("text/html; charset = UTF-8");	 
 		//request.setCharacterEncoding("UTF-8");
@@ -25,38 +23,26 @@ public class Calc extends HttpServlet {
 		 * 2. Servlet 문서에 request.setCharacterEncoding("UTF-8"); <추천>
 		 */
 		
-		// 사용자가 값과 + or - 누르면 이쪽(operator)으로 전달
-		String v_ = request.getParameter("v");
+		PrintWriter out = response.getWriter();	//출력
+		
+		String x_ = request.getParameter("x");
+		String y_ = request.getParameter("y");
 		String op = request.getParameter("operator");
 		
-		int v = 0;		 
-		if(!v_.equals("")) v = Integer.parseInt(v_);
+		int x = 0;		// 빈문자열 올경우 x or y = 0이 온다 
+		int y = 0;
 		
-		//계산
-		if(op.equals("=")) {	//=를 누르면 계산됨
-			
-			int x = (Integer)application.getAttribute("value");	//앞에서 저장했던 application에 있던 값을 꺼내서(get) 연산
-			int y = v;
-			String operator = (String)application.getAttribute("op");;
-			int result=0;		//기본값
-			
-			if(operator.equals("+"))
-				result = x+y;
-			else
-				result = x-y;
-			
-			response.getWriter().printf("reuslt is %d\n", result);
+		if(!x_.equals("")) x = Integer.parseInt(x_);
+		if(!y_.equals("")) y = Integer.parseInt(y_);
 		
-		// 값을 저장
-		}else {	//operator가 != 이라면 + or - 이 될꺼고 application context에 저장(set)
-			
-			application.setAttribute("value", v); 		//map collection
-			application.setAttribute("op", op);			// 두개를 꺼내 쓸 수 있다.
-		}
+		int result=0;		//기본값
 		
+		if(op.equals("덧셈"))
+			result = x+y;
+		else
+			result = x-y;
 		
-		
-		
+		response.getWriter().printf("reuslt is %d\n", result);
 		
 		
 	
